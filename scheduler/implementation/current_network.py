@@ -1,9 +1,9 @@
 import uuid
 from typing import List, Dict
-
 from scheduler.abstract.abstract_network import AbstractNetwork
-from scheduler.implementation.node import Node
 
+from scheduler.implementation.awerbuch_node import AwerbuchNode
+# from scheduler.implementation.cidon_node import CidonNode
 
 class CurrentNetwork(AbstractNetwork):
     NUMBER_OF_NODES = 8
@@ -11,12 +11,13 @@ class CurrentNetwork(AbstractNetwork):
     def __init__(self) -> None:
         self.nodes = []
         ids = [uuid.uuid4() for _ in range(self.NUMBER_OF_NODES)]
-        self.__get_edges(ids)
+        self.get_edges(ids)
         for node_id in ids:
-            self.nodes.append(Node(node_id, self.edges[node_id]))
+            # AwerbuchNode or CidonNode
+            self.nodes.append(AwerbuchNode(node_id, self.edges[node_id]))
         super().__init__(self.nodes)
 
-    def __get_edges(self, ids: List[uuid.UUID]) -> Dict[uuid.UUID, List[uuid.UUID]]:
+    def get_edges(self, ids: List[uuid.UUID]) -> Dict[uuid.UUID, List[uuid.UUID]]:
         self.edges = {
             ids[0]: [ids[1], ids[2]],
             ids[1]: [ids[0], ids[3], ids[4]],
