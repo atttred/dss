@@ -1,15 +1,15 @@
 import uuid
-from typing import Any
+from typing import Any, Dict
 
 
 class Action:
 
     action_type: str
-    data: dict[Any, Any]
+    data: Dict[Any, Any]
     node_id: uuid.UUID
     action_id: uuid.UUID
 
-    def __init__(self, data: dict[Any: Any], node_id: uuid.UUID, action_id: uuid.UUID) -> None:
+    def __init__(self, data: Dict[Any, Any], node_id: uuid.UUID, action_id: uuid.UUID) -> None:
         self.data = data
         self.node_id = node_id
         self.action_id = action_id

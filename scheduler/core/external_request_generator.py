@@ -2,7 +2,7 @@ import string
 import uuid
 from datetime import datetime
 from random import choices, choice
-from typing import List
+from typing import List, Dict
 from uuid import UUID
 
 from scheduler.abstract.abstract_node import AbstractNode
@@ -16,7 +16,7 @@ class ExternalRequestGenerator:
         self.nodes = [node for node in nodes if len(node.neighbors) == 1]
         self.total_request_limit = settings.EXTERNAL_REQUEST_TOTAL_REQUESTS_NUMBER
 
-    def get_requests(self) -> list[dict[UUID, ExternalRequest]]:
+    def get_requests(self) -> List[Dict[UUID, ExternalRequest]]:
         number_of_requests = choices(settings.NUMBER_OF_REQUESTS, settings.WEIGHTS)[0]
         requests = []
         while number_of_requests > 0 and (self.total_request_limit is None or self.total_request_limit > 0):
@@ -33,7 +33,7 @@ class ExternalRequestGenerator:
         self.__save_request(requests)
         return requests
 
-    def __save_request(self, requests: List[dict[UUID, ExternalRequest]]) -> None:
+    def __save_request(self, requests: List[Dict[UUID, ExternalRequest]]) -> None:
         if requests:
             with open('test_results/requests.txt', 'a') as file:
                 for request in requests:

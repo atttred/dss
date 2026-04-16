@@ -1,4 +1,5 @@
 import uuid
+from typing import Dict
 from time import sleep
 from timeit import default_timer
 
@@ -13,7 +14,7 @@ class Observer:
     A main class which runs simulation.
     """
     network: AbstractNetwork
-    nodes: dict[uuid.UUID, AbstractNode]
+    nodes: Dict[uuid.UUID, AbstractNode]
 
     def __init__(self, network: AbstractNetwork):
         nodes = network.nodes
