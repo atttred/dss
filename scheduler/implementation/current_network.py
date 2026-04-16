@@ -1,26 +1,22 @@
 import uuid
-from typing import List
-
+from typing import List, Dict
 from scheduler.abstract.abstract_network import AbstractNetwork
-from scheduler.implementation.lai_yang_node import LaiYangNode
-
+from scheduler.implementation.election_node import ElectionNode 
 
 class CurrentNetwork(AbstractNetwork):
-    def __init__(self):
+    def __init__(self) -> None:
         self.nodes = []
-        self.build_network()
+        ids = [uuid.uuid4() for _ in range(8)]
+        edges = {
+            ids[0]: [ids[1], ids[2]],
+            ids[1]: [ids[0], ids[3], ids[4]],
+            ids[2]: [ids[0], ids[5], ids[6], ids[7]],
+            ids[3]: [ids[1]], ids[4]: [ids[1]],
+            ids[5]: [ids[2]], ids[6]: [ids[2]], ids[7]: [ids[2]]
+        }
+        for node_id in ids:
+            self.nodes.append(ElectionNode(node_id, edges[node_id]))
         super().__init__(self.nodes)
-
-    def build_network(self):
-        id1 = uuid.uuid4()
-        id2 = uuid.uuid4()
-        id3 = uuid.uuid4()
-
-        node1 = LaiYangNode(node_id=id1, neighbors=[id2])
-        node2 = LaiYangNode(node_id=id2, neighbors=[id1, id3])
-        node3 = LaiYangNode(node_id=id3, neighbors=[id2])
-
-        self.nodes.extend([node1, node2, node3])
 
     def get_nodes(self):
         return self.nodes
