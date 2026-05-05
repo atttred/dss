@@ -1,30 +1,25 @@
 import uuid
-from typing import List, Dict
 from scheduler.abstract.abstract_network import AbstractNetwork
-from scheduler.implementation.election_node import ElectionNode 
+from scheduler.implementation.safra_node import SafraNode
+# from scheduler.implementation.rana_node import RanaNode
 
 class CurrentNetwork(AbstractNetwork):
     def __init__(self) -> None:
         self.nodes = []
-        ids = [uuid.uuid4() for _ in range(8)]
+        
+        # Створюємо кільце з 4 вузлів для Сафри
+        ids = [uuid.uuid4() for _ in range(4)]
         edges = {
-            ids[0]: [ids[1], ids[2]],
-            ids[1]: [ids[0], ids[3], ids[4]],
-            ids[2]: [ids[0], ids[5], ids[6], ids[7]],
-            ids[3]: [ids[1]], ids[4]: [ids[1]],
-            ids[5]: [ids[2]], ids[6]: [ids[2]], ids[7]: [ids[2]]
+            ids[0]: [ids[1]],  # 0 передає 1
+            ids[1]: [ids[2]],  # 1 передає 2
+            ids[2]: [ids[3]],  # 2 передає 3
+            ids[3]: [ids[0]],  # 3 замикає на 0
         }
-        for node_id in ids:
-            self.nodes.append(ElectionNode(node_id, edges[node_id]))
+        
+        for i, node_id in enumerate(ids):
+            # Робимо перший вузол (i=0) ініціатором
+            node = SafraNode(node_id, edges[node_id])
+            node.is_initiator = (i == 0)
+            self.nodes.append(node)
+            
         super().__init__(self.nodes)
-
-    def get_nodes(self):
-        return self.nodes
-
-
-if __name__ == "__main__":
-    from scheduler.core.observer import Observer
-
-    network = CurrentNetwork()
-    observer = Observer(network)
-    observer.run()
